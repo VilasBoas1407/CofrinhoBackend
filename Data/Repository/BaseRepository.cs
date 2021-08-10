@@ -1,9 +1,11 @@
 ﻿using Data.Context;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data.Repository
@@ -117,34 +119,11 @@ namespace Data.Repository
             return item;
         }
 
-        Task<T> IRepository<T>.InsertAsync(T item)
+        public IEnumerable<T> SelectWithFilter(Func<T, bool> filtro)
         {
-            throw new NotImplementedException();
+            return _dataSet.Where(filtro);
         }
 
-        Task<T> IRepository<T>.UpdateAsync(T item)
-        {
-            throw new NotImplementedException();
-        }
 
-        Task<bool> IRepository<T>.DeleteAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<T> IRepository<T>.SelectAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IEnumerable<T>> IRepository<T>.SelectAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IRepository<T>.ExistAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

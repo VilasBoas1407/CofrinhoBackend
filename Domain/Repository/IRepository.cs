@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces
+namespace Domain.Repository
 {
     public interface IRepository<T> where T : BaseEntity
     {
@@ -13,5 +13,6 @@ namespace Domain.Interfaces
         Task<T> SelectAsync(Guid id);
         Task<IEnumerable<T>> SelectAsync();
         Task<bool> ExistAsync(Guid id);
+        IEnumerable<T> SelectWithFilter(Func<T, bool> filtro);
     }
 }

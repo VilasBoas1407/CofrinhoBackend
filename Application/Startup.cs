@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using CrossCutting.Mapping;
+using System.IO;
+using System.Reflection;
 
 namespace Application
 {
@@ -31,7 +34,9 @@ namespace Application
             ConfigureRepository.ConfigureDependenciesRepository(services);
 
             //Configurando AutoMapper, responsável por converter as classes
-            var config = new MapperConfiguration(c => {});
+            var config = new MapperConfiguration(c => {
+                c.AddProfile(new EntityToDtoProfile());
+            });
 
             IMapper mapper = config.CreateMapper();
 
@@ -107,6 +112,10 @@ namespace Application
                        }, new List<string>()
                     }
                });
+
+               var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+               var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+               c.IncludeXmlComments(xmlPath);
             });
         }
 
@@ -119,7 +128,11 @@ namespace Application
 
             }
 
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.SerializeAsV2 = true;
+            });
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api para aplicativo de controle financeiro.");

@@ -10,7 +10,7 @@ namespace Data.Mapping
         {
             builder.ToTable("LoginHistory");
 
-            builder.HasNoKey();
+            builder.HasKey(u => u.Id);
 
             builder.Property(u => u.Name)
            .IsRequired();
@@ -18,8 +18,6 @@ namespace Data.Mapping
             builder.Property(u => u.Email)
            .IsRequired();
 
-            builder.Property(u => u.Date)
-           .IsRequired();
         }
     }
 }
