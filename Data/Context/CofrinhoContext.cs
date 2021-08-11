@@ -9,6 +9,12 @@ namespace Data.Context
     {
         public CofrinhoContext(DbContextOptions<CofrinhoContext> options) : base(options) { }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+                optionsBuilder.UseSqlServer("Server=(localdb) \\mssqllocaldb;Database=DBTarefas;Trusted_Connection=true");
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

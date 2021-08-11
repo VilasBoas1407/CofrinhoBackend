@@ -9,8 +9,10 @@ using Domain.Repository.History;
 using Domain.Security;
 using Domain.Utils;
 using Microsoft.Extensions.Configuration;
+using Service.Utils;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Service.Services
@@ -44,6 +46,9 @@ namespace Service.Services
         {
             try
             {
+
+                loginRequest.Password = new Hash().CriptografarSenha(loginRequest.Password);
+
                 UserEntity user = userRepository
                                 .SelectWithFilter(u => u.Email.Equals(loginRequest.Email) && u.Password.Equals(loginRequest.Password))
                                 .FirstOrDefault();
@@ -76,6 +81,8 @@ namespace Service.Services
             try
             {
                 UserEntity user = mapper.Map<UserEntity>(userRegister);
+
+                user.Password = new Hash().CriptografarSenha(userRegister.Password);
 
                 var result = await userRepository.InsertAsync(user);
 
