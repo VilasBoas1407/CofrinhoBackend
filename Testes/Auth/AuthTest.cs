@@ -43,5 +43,17 @@ namespace Testes.Login
             Assert.NotNull(result_service);
             Assert.Equal(result_service.Data.Email, userLogin.Email);
         }
+
+        [Fact]
+        public async void DeveRealizarLoginComGoogleAuth()
+        {
+
+        }
+
+        [Fact]
+        public async void DeveRealizarOCadastradoDoUsuario()
+        {
+
+        }
     }
 }

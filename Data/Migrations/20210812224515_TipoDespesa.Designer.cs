@@ -4,14 +4,16 @@ using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(CofrinhoContext))]
-    partial class CofrinhoContextModelSnapshot : ModelSnapshot
+    [Migration("20210812224515_TipoDespesa")]
+    partial class TipoDespesa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,17 +33,20 @@ namespace Data.Migrations
                     b.Property<bool>("GastoFixo")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("IdPlanejamento")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("IdPlanejamento")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("IdTipoDespesa")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("IdTipoDespesa")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("IdUsuario")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("IdUser")
+                        .HasColumnType("int");
 
                     b.Property<int>("ParcelaAtual")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("PlanejamentoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("QuantidadeParcelas")
                         .HasColumnType("int");
@@ -52,8 +57,14 @@ namespace Data.Migrations
                     b.Property<int>("Recorrencia")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("TipoDespesaId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("ValorParcela")
                         .HasColumnType("float");
@@ -63,13 +74,13 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdPlanejamento");
+                    b.HasIndex("PlanejamentoId");
 
-                    b.HasIndex("IdTipoDespesa");
+                    b.HasIndex("TipoDespesaId");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Despesas");
+                    b.ToTable("DespesasEntity");
                 });
 
             modelBuilder.Entity("Domain.Entities.History.LoginHistoryEntity", b =>
@@ -199,22 +210,16 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Expenses.DespesasEntity", b =>
                 {
                     b.HasOne("Domain.Entities.Planejamento.PlanejamentoEntity", "Planejamento")
-                        .WithMany("Despesas")
-                        .HasForeignKey("IdPlanejamento")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("PlanejamentoId");
 
                     b.HasOne("Domain.Entities.Planejamento.TipoDespesaEntity", "TipoDespesa")
-                        .WithMany("Despesas")
-                        .HasForeignKey("IdTipoDespesa")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("TipoDespesaId");
 
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("Despesas")
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Planejamento");
 
@@ -228,7 +233,7 @@ namespace Data.Migrations
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("Planejamentos")
                         .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -239,20 +244,10 @@ namespace Data.Migrations
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("TipoDespesas")
                         .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoEntity", b =>
-                {
-                    b.Navigation("Despesas");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Planejamento.TipoDespesaEntity", b =>
-                {
-                    b.Navigation("Despesas");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserEntity", b =>

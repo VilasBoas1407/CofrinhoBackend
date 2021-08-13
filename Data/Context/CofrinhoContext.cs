@@ -1,6 +1,9 @@
 ﻿using Data.Mapping;
+using Data.Mapping.Planejamento;
 using Domain.Entities;
+using Domain.Entities.Expenses;
 using Domain.Entities.History;
+using Domain.Entities.Planejamento;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Context
@@ -21,6 +24,46 @@ namespace Data.Context
 
             modelBuilder.Entity<UserEntity>(new UserMap().Configure);
             modelBuilder.Entity<LoginHistoryEntity>(new LoginHistoryMap().Configure);
+            modelBuilder.Entity<DespesasEntity>(new DespesasMap().Configure);
+            modelBuilder.Entity<PlanejamentoEntity>(new PlanejamentoMap().Configure);
+            modelBuilder.Entity<TipoDespesaEntity>(new TipoDespesaMap().Configure);
+
+
+            #region Definindo relacionamentos
+
+
+            modelBuilder.Entity<DespesasEntity>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Despesas)
+                .HasForeignKey(p => p.IdUsuario)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<DespesasEntity>().HasOne(p => p.TipoDespesa)
+                .WithMany(u => u.Despesas)
+                .HasForeignKey(p => p.IdTipoDespesa)
+                .OnDelete(DeleteBehavior.NoAction); 
+
+            modelBuilder.Entity<DespesasEntity>().HasOne(p => p.Planejamento)
+                 .WithMany(u => u.Despesas)
+                 .HasForeignKey(p => p.IdPlanejamento)
+                 .OnDelete(DeleteBehavior.NoAction);
+
+
+            modelBuilder.Entity<PlanejamentoEntity>()
+                .HasOne(p => p.User)
+                .WithMany(b => b.Planejamentos)
+                .HasForeignKey(p => p.IdUsuario)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TipoDespesaEntity>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.TipoDespesas)
+                .HasForeignKey(p => p.IdUsuario)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+
+            #endregion
 
         }
     }
