@@ -13,16 +13,12 @@ namespace Service.Planejamento
     public class PlanejamentoService : IPlanejamentoService
     {
         private IPlanejamentoRepository planejamentoRepository;
-        private IConfiguration configuration { get; }
         private readonly IMapper mapper;
         
 
-        public PlanejamentoService(IPlanejamentoRepository _planejamento,
-            IConfiguration _configuration,
-            IMapper _mapper)
+        public PlanejamentoService(IPlanejamentoRepository _planejamento,IMapper _mapper)
         {
             mapper = _mapper;
-            configuration = _configuration;
             planejamentoRepository = _planejamento;
 
         }

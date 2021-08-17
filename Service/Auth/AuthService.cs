@@ -26,13 +26,15 @@ namespace Service.Auth
         public TokenConfigurations tokenConfigurations;
         private IConfiguration configuration { get; }
         private readonly IMapper mapper;
+        private IPlanejamentoService planejamentoService;
 
         public AuthService(IUserRepository _userRepository, 
                     SigningConfigurations _signingConfigurations,
                     TokenConfigurations _tokenConfigurations,
                     IConfiguration _configuration,
                     IMapper _mapper,
-                    ILoginHistoryRepository _loginHistoryRepository)
+                    ILoginHistoryRepository _loginHistoryRepository,
+                    IPlanejamentoService _planejamentoService)
         {
             userRepository = _userRepository;
             signingConfigurations = _signingConfigurations;
@@ -40,6 +42,7 @@ namespace Service.Auth
             configuration = _configuration;
             mapper = _mapper;
             loginHistoryRepository = _loginHistoryRepository;
+            planejamentoService = _planejamentoService;
         }
 
 
@@ -92,16 +95,16 @@ namespace Service.Auth
 
                 var result = await userRepository.InsertAsync(user);
 
-                //PlanejamentoRegisterDTO planejamentoRegister = new PlanejamentoRegisterDTO();
+                PlanejamentoRegisterDTO planejamentoRegister = new PlanejamentoRegisterDTO();
 
-                //planejamentoRegister.MesReferencia = DateTime.Now.Month;
-                //planejamentoRegister.AnoReferencia = DateTime.Now.Year;
-                //planejamentoRegister.DataInicio = new DateTime(DateTime.Now.Year,DateTime.Now.Month,1);
-                //planejamentoRegister.DataFim = new DateTime(DateTime.Now.Year,DateTime.Now.Month,DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                //planejamentoRegister.IdUsuario = result.Id;
-                //planejamentoRegister.Ativo = true;
+                planejamentoRegister.MesReferencia = DateTime.Now.Month;
+                planejamentoRegister.AnoReferencia = DateTime.Now.Year;
+                planejamentoRegister.DataInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                planejamentoRegister.DataFim = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                planejamentoRegister.IdUsuario = result.Id;
+                planejamentoRegister.Ativo = true;
 
-                //var resultPlanejamento = await planejamentoService.DoRegisterAsync(planejamentoRegister);
+                var resultPlanejamento = await planejamentoService.DoRegisterAsync(planejamentoRegister);
 
                 if (result != null)
                     return new Response(201, "Usuário cadastrado com sucesso!");
