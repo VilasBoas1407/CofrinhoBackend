@@ -40,7 +40,6 @@ namespace Application
 
             IMapper mapper = config.CreateMapper();
 
-
             var signingConfigurations = new SigningConfigurations();
             var tokenConfigurations = new TokenConfigurations();
 

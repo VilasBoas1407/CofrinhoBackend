@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.DTO;
 using Domain.DTO.Login;
+using Domain.DTO.Planejamento;
 using Domain.Entities;
 using Domain.Entities.History;
 using Domain.Interfaces;
@@ -15,7 +16,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace Service.Services
+namespace Service.Auth
 {
     public class AuthService : IAuthService
     {
@@ -82,9 +83,25 @@ namespace Service.Services
             {
                 UserEntity user = mapper.Map<UserEntity>(userRegister);
 
+                bool hasEmailCadastrado =  userRepository.ExistAsync(u => u.Email.Equals(user.Email));
+
+                if (hasEmailCadastrado)
+                    return new Response(400, "E-mail já cadastrado na base de dados!");
+
                 user.Password = new Hash().CriptografarSenha(userRegister.Password);
 
                 var result = await userRepository.InsertAsync(user);
+
+                //PlanejamentoRegisterDTO planejamentoRegister = new PlanejamentoRegisterDTO();
+
+                //planejamentoRegister.MesReferencia = DateTime.Now.Month;
+                //planejamentoRegister.AnoReferencia = DateTime.Now.Year;
+                //planejamentoRegister.DataInicio = new DateTime(DateTime.Now.Year,DateTime.Now.Month,1);
+                //planejamentoRegister.DataFim = new DateTime(DateTime.Now.Year,DateTime.Now.Month,DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                //planejamentoRegister.IdUsuario = result.Id;
+                //planejamentoRegister.Ativo = true;
+
+                //var resultPlanejamento = await planejamentoService.DoRegisterAsync(planejamentoRegister);
 
                 if (result != null)
                     return new Response(201, "Usuário cadastrado com sucesso!");

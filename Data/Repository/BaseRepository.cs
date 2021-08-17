@@ -124,6 +124,9 @@ namespace Data.Repository
             return _dataSet.Where(filtro);
         }
 
-
+        public bool ExistAsync(Func<T, bool> filtro)
+        {
+            return _dataSet.Any(filtro);
+        }
     }
 }

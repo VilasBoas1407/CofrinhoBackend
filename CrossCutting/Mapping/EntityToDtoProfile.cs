@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Domain.DTO.Login;
+using Domain.DTO.Planejamento;
 using Domain.Entities;
+using Domain.Entities.Planejamento;
 
 namespace CrossCutting.Mapping
 {
@@ -10,6 +12,7 @@ namespace CrossCutting.Mapping
         {
             CreateMap<UserEntity, LoginResponseDTO>().ReverseMap();
             CreateMap<UserEntity, UserRegisterRequestDTO>().ReverseMap();
+            CreateMap<PlanejamentoEntity, PlanejamentoRegisterDTO>().ReverseMap();
         }
         
     }

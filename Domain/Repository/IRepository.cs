@@ -13,6 +13,7 @@ namespace Domain.Repository
         Task<T> SelectAsync(Guid id);
         Task<IEnumerable<T>> SelectAsync();
         Task<bool> ExistAsync(Guid id);
+        bool ExistAsync(Func<T,bool> filtro);
         IEnumerable<T> SelectWithFilter(Func<T, bool> filtro);
     }
 }

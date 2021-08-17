@@ -1,6 +1,7 @@
 ﻿using Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Services;
+using Service.Auth;
+using Service.Planejamento;
 
 namespace CrossCutting.DependencyInjection
 {
@@ -9,6 +10,7 @@ namespace CrossCutting.DependencyInjection
         public static void ConfigureDependenciesService(IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<IAuthService, AuthService>();
+            serviceCollection.AddTransient<IPlanejamentoService, PlanejamentoService>();
         }
     }
 }

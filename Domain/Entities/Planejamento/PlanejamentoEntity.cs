@@ -13,6 +13,7 @@ namespace Domain.Entities.Planejamento
         public int AnoReferencia { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
+        public bool Ativo { get; set; }
 
         public Guid IdUsuario { get; set; }
         public UserEntity User { get; set; }
