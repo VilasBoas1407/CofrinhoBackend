@@ -36,9 +36,9 @@ namespace Application.Controllers
                 Response response = await service.DoLoginAsync(loginDTO);
 
                 if(response.StatusCode == 200)
-                    return StatusCode(response.StatusCode, new { response.Data });
+                    return StatusCode(response.StatusCode, response.Result);
                 else
-                    return StatusCode(response.StatusCode, new { response.Message });
+                    return StatusCode(response.StatusCode, response.Message);
 
             }
             catch (Exception e)

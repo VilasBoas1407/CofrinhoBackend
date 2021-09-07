@@ -10,10 +10,14 @@ using Domain.Repository.History;
 using Domain.Security;
 using Domain.Utils;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Service.Utils;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Service.Auth
@@ -28,7 +32,7 @@ namespace Service.Auth
         private readonly IMapper mapper;
         private IPlanejamentoService planejamentoService;
 
-        public AuthService(IUserRepository _userRepository, 
+        public AuthService(IUserRepository _userRepository,
                     SigningConfigurations _signingConfigurations,
                     TokenConfigurations _tokenConfigurations,
                     IConfiguration _configuration,
@@ -57,16 +61,41 @@ namespace Service.Auth
                                 .SelectWithFilter(u => u.Email.Equals(loginRequest.Email) && u.Password.Equals(loginRequest.Password))
                                 .FirstOrDefault();
 
-                if(user != null)
+                if (user != null)
                 {
                     LoginHistoryEntity history = new LoginHistoryEntity();
 
                     history.Name = user.Name;
                     history.Email = user.Email;
+                    history.CreateAt = DateTime.Now;
 
                     await loginHistoryRepository.InsertAsync(history);
 
-                    var result = mapper.Map<LoginResponseDTO>(user);
+                    LoginResponseDTO responseDTO = mapper.Map<LoginResponseDTO>(user);
+
+                    ClaimsIdentity identity = new ClaimsIdentity(
+                    new GenericIdentity(user.Email),
+                        new[]
+                        {
+                                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                                new Claim(JwtRegisteredClaimNames.UniqueName, user.Email)
+                        }
+                    );
+
+
+                    DateTime createDate = DateTime.Now;
+                    DateTime experationDate = createDate + TimeSpan.FromSeconds(tokenConfigurations.Seconds);
+
+
+                    var handler = new JwtSecurityTokenHandler();
+                    string token = CreateToken(identity, createDate, experationDate, handler);
+
+
+                    responseDTO.Token = token;
+                    responseDTO.TokenExpiration = experationDate;
+
+                    var result = responseDTO;
+
                     return new Response(200, result);
                 }
                 else
@@ -76,7 +105,7 @@ namespace Service.Auth
             }
             catch (Exception ex)
             {
-                return new Response(500,  "Ocorreu um erro ao realizar a autenticação:" + ex.Message);
+                return new Response(500, "Ocorreu um erro ao realizar a autenticação:" + ex.Message);
             }
         }
 
@@ -86,7 +115,7 @@ namespace Service.Auth
             {
                 UserEntity user = mapper.Map<UserEntity>(userRegister);
 
-                bool hasEmailCadastrado =  userRepository.ExistAsync(u => u.Email.Equals(user.Email));
+                bool hasEmailCadastrado = userRepository.ExistAsync(u => u.Email.Equals(user.Email));
 
                 if (hasEmailCadastrado)
                     return new Response(400, "E-mail já cadastrado na base de dados!");
@@ -115,6 +144,31 @@ namespace Service.Auth
             {
                 return new Response(500, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
             }
+        }
+
+        private string CreateToken(ClaimsIdentity identity, DateTime createDate, DateTime experationDate, JwtSecurityTokenHandler handler)
+        {
+            try
+            {
+                var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+                {
+                    Issuer = tokenConfigurations.Issuer,
+                    Audience = tokenConfigurations.Audience,
+                    SigningCredentials = signingConfigurations.SigningCredentials,
+                    Subject = identity,
+                    NotBefore = createDate,
+                    Expires = experationDate
+                });
+
+                var token = handler.WriteToken(securityToken);
+                return token;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
 }

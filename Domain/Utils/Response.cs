@@ -11,12 +11,12 @@
         public Response(int StatusCode, dynamic Data)
         {
             this.StatusCode = StatusCode;
-            this.Data = Data;
+            this.Result = Data;
 
         }
 
         public int StatusCode { get; set; }
         public string Message{ get; set; }
-        public dynamic Data { get; set; }
+        public dynamic Result { get; set; }
     }
 }
