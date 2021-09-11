@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.DTO.Planejamento;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,6 +14,9 @@ namespace Domain.DTO.Login
         public DateTime UpdateAt { get; set; }
         public string Token {get;set;}
         public DateTime TokenExpiration { get; set; }
+
+        public PlanejamentoDTO planejamentoAtivo { get; set; }
+
 
     }
 }

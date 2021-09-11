@@ -13,6 +13,7 @@ namespace CrossCutting.Mapping
             CreateMap<UserEntity, LoginResponseDTO>().ReverseMap();
             CreateMap<UserEntity, UserRegisterRequestDTO>().ReverseMap();
             CreateMap<PlanejamentoEntity, PlanejamentoRegisterDTO>().ReverseMap();
+            CreateMap<PlanejamentoEntity, PlanejamentoDTO>().ReverseMap();
         }
         
     }

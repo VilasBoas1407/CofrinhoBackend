@@ -41,7 +41,7 @@ namespace Testes.Login
             var result_service = await authService.DoLoginAsync(userLogin);
 
             Assert.NotNull(result_service);
-            Assert.Equal(result_service.Data.Email, userLogin.Email);
+            Assert.Equal(result_service.Result.Email, userLogin.Email);
         }
 
         [Fact]

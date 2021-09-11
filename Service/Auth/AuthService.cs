@@ -90,6 +90,7 @@ namespace Service.Auth
                     var handler = new JwtSecurityTokenHandler();
                     string token = CreateToken(identity, createDate, experationDate, handler);
 
+                    responseDTO.planejamentoAtivo = planejamentoService.GetPlanejamentoAtivoByUser(user.Id);
 
                     responseDTO.Token = token;
                     responseDTO.TokenExpiration = experationDate;
@@ -128,10 +129,8 @@ namespace Service.Auth
 
                 planejamentoRegister.MesReferencia = DateTime.Now.Month;
                 planejamentoRegister.AnoReferencia = DateTime.Now.Year;
-                planejamentoRegister.DataInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                planejamentoRegister.DataFim = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                 planejamentoRegister.IdUsuario = result.Id;
-                planejamentoRegister.Ativo = true;
+
 
                 var resultPlanejamento = await planejamentoService.DoRegisterAsync(planejamentoRegister);
 
