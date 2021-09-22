@@ -51,7 +51,7 @@ namespace Service.Planejamento
                     return new Response(201, "Planejamento cadastrado com sucesso!");
                 }
                 else
-                    return new Response(400, "Erro ao cadastrar usuário!");
+                    return new Response(400, "Erro ao cadastrar planejamento!");
 
             }
             catch (Exception ex)

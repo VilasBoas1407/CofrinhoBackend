@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.DTO.Despesas;
 using Domain.DTO.Login;
 using Domain.DTO.Planejamento;
 using Domain.Entities;
@@ -14,6 +15,7 @@ namespace CrossCutting.Mapping
             CreateMap<UserEntity, UserRegisterRequestDTO>().ReverseMap();
             CreateMap<PlanejamentoEntity, PlanejamentoRegisterDTO>().ReverseMap();
             CreateMap<PlanejamentoEntity, PlanejamentoDTO>().ReverseMap();
+            CreateMap<TipoDespesaEntity, TipoDespesaRegisterDTO>().ReverseMap();
         }
         
     }
