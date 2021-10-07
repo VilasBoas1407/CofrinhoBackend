@@ -7,6 +7,7 @@ using Domain.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Service.Despesa
@@ -15,11 +16,36 @@ namespace Service.Despesa
     {
         private readonly IMapper mapper;
         private ITipoDespesaRepository tipoDespesaRepository;
+        private IDespesaRepository despesaRepository;
 
-        public TipoDespesaService(ITipoDespesaRepository _tipoDespesaRepository, IMapper _mapper)
+        public TipoDespesaService(ITipoDespesaRepository _tipoDespesaRepository, IMapper _mapper, IDespesaRepository _despesaRepository)
         {
             mapper = _mapper;
             tipoDespesaRepository = _tipoDespesaRepository;
+            despesaRepository = _despesaRepository;
+        }
+
+        public async Task<Response> Delete(Guid id)
+        {
+            try
+            {
+                bool temDespesaCadastraComTipo =  despesaRepository.ExistAsync(d => d.IdTipoDespesa.Equals(id));
+
+                if (temDespesaCadastraComTipo)
+                {
+                    return new Response((int)HttpStatusCode.Conflict, "O tipo de despesa/receita não pode ser excluído, pois ele está vinculado a uma despesa.");
+                }
+                else
+                {
+                    await tipoDespesaRepository.DeleteAsync(id);
+                    return new Response((int)HttpStatusCode.OK, "Registro excluído com sucesso!");
+                }
+            }
+            catch (Exception ex)
+            {
+
+               return new Response((int)HttpStatusCode.BadRequest, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
+            }
         }
 
         public async Task<Response> DoRegisterAsync(TipoDespesaRegisterDTO register)
@@ -41,11 +67,16 @@ namespace Service.Despesa
             }
             catch (Exception ex)
             {
-                return new Response(500, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
+                return new Response((int)HttpStatusCode.BadRequest, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
             }
         }
 
-        public async Task<Response> GetAll(Guid idUser)
+        public Task<Response> DoUpdateAsync(TipoDespesaRegisterDTO update)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Response GetAll(Guid idUser)
         {
             try
             {
@@ -53,16 +84,16 @@ namespace Service.Despesa
 
                 if (listTipoDespesa.Count != 0)
                 {
-                    return new Response(200, listTipoDespesa);
+                    return new Response((int)HttpStatusCode.OK, listTipoDespesa);
                 }
                 else
                 {
-                    return new Response(204, "Não foram encontrados nenhum tipo despesa cadastrado para o usuário.");
+                    return new Response((int)HttpStatusCode.NoContent, "Não foram encontrados nenhum tipo despesa cadastrado para o usuário.");
                 }
             }
             catch (Exception ex)
             {
-                return new Response(500, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
+                return new Response((int)HttpStatusCode.BadRequest, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
             }
         }
 
@@ -74,16 +105,16 @@ namespace Service.Despesa
 
                 if (tipoDespesa != null)
                 {
-                    return new Response(200, tipoDespesa);
+                    return new Response((int)HttpStatusCode.OK, tipoDespesa);
                 }
                 else
                 {
-                    return new Response(204, "Não foram encontrados nenhum tipo despesa cadastrado para o usuário.");
+                    return new Response((int)HttpStatusCode.NoContent, "Não foram encontrados nenhum tipo despesa cadastrado para o usuário.");
                 }
             }
             catch (Exception ex)
             {
-                return new Response(500, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
+                return new Response((int)HttpStatusCode.BadRequest, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
             }
         }
     }

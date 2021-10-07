@@ -5,6 +5,8 @@ namespace Domain.DTO.Despesas
 {
     public class TipoDespesaRegisterDTO
     {
+        public Guid Id { get; set; }
+
         [Required(ErrorMessage ="Nome é um campo obrigatório")]
         public string Nome { get; set; }
 

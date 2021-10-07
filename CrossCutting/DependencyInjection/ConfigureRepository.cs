@@ -21,6 +21,7 @@ namespace CrossCutting.DependencyInjection
             serviceCollection.AddTransient<ILoginHistoryRepository, LoginHistoryRepository>();
             serviceCollection.AddTransient<IPlanejamentoRepository, PlanejamentoRepository>();
             serviceCollection.AddTransient<ITipoDespesaRepository, TipoDespesaRepository>();
+            serviceCollection.AddTransient<IDespesaRepository, DespesaRepository>();
 
             serviceCollection.AddDbContext<CofrinhoContext>(
                 options => options.UseSqlServer("Server=127.0.0.1;Database=DB_COFRINHO;User Id=sa;Password=123456;")

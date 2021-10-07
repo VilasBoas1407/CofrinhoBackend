@@ -23,8 +23,7 @@ namespace Application.Controllers
         /// <response code="500">Erro interno</response>
         [Authorize("Bearer")]
         [HttpPost]
-
-        public async Task<object> RegisterAsync([FromBody] TipoDespesaRegisterDTO userRegister, [FromServices] ITipoDesepesaService service)
+        public async Task<object> RegisterAsync([FromBody] TipoDespesaRegisterDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +32,7 @@ namespace Application.Controllers
 
             try
             {
-                Response response = await service.DoRegisterAsync(userRegister);
+                Response response = await service.DoRegisterAsync(tipoDespesaRegister);
 
                 return StatusCode(response.StatusCode, new { response.Message });
             }
@@ -53,11 +52,14 @@ namespace Application.Controllers
         [Authorize("Bearer")]
         [HttpGet]
         [Route("{idUser}")]
-        public async Task<object> GetAll([FromRoute] Guid idUser, [FromServices] ITipoDesepesaService service)
+        public object GetAll([FromRoute] Guid idUser, [FromServices] ITipoDesepesaService service)
         {
             try
             {
-                Response response = await service.GetAll(idUser);
+                Response response =  service.GetAll(idUser);
+
+                if (response.StatusCode == 200)
+                    return StatusCode(response.StatusCode , response.Result);
 
                 return StatusCode(response.StatusCode, new { response.Message });
             }
@@ -83,6 +85,9 @@ namespace Application.Controllers
             {
                 Response response = await service.GetByID(id);
 
+                if (response.StatusCode == 200)
+                    return StatusCode(response.StatusCode, response.Result);
+
                 return StatusCode(response.StatusCode, new { response.Message });
             }
             catch (Exception e)
@@ -91,6 +96,33 @@ namespace Application.Controllers
             }
         }
 
+        /// <summary>
+        /// Deleta o tipo de despesa
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="service"></param>
+        /// <returns>
+        /// <response code="200">Excluído</response>
+        /// <response code="409">Tipo despesa está vinculado a alguma despesa</response>
+        /// </returns>
+        [Authorize("Bearer")]
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<object> Delete([FromRoute] Guid id, [FromServices] ITipoDesepesaService service)
+        {
+            try
+            {
+                Response response = await service.Delete(id);
 
+                if (response.StatusCode == 200)
+                    return StatusCode(response.StatusCode, new { response.Message });
+
+                return StatusCode(response.StatusCode, new { response.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
     }
 }
