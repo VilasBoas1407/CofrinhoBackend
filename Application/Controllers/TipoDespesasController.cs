@@ -11,7 +11,7 @@ namespace Application.Controllers
 {
     [Route("api/tipoDespesa")]
     [ApiController]
-    public class TipoDespesaController : ControllerBase
+    public class TipoDespesasController : ControllerBase
     {
 
         /// <summary>
