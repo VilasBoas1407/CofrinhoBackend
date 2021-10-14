@@ -23,7 +23,7 @@ namespace Application.Controllers
         /// <response code="500">Erro interno</response>
         [Authorize("Bearer")]
         [HttpPost]
-        public async Task<object> RegisterAsync([FromBody] TipoDespesaRegisterDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
+        public async Task<object> Register([FromBody] TipoDespesaRegisterDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
         {
             if (!ModelState.IsValid)
             {
@@ -37,6 +37,24 @@ namespace Application.Controllers
                 return StatusCode(response.StatusCode, new { response.Message });
             }
             catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        [Authorize("Bearer")]
+        [HttpPut]
+        public async Task<object> Update([FromBody] TipoDespesaRegisterDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                Response response = await service.DoUpdateAsync(tipoDespesaRegister);
+                return StatusCode(response.StatusCode, new { response.Message });
+            }
+            catch (Exception e )
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
             }

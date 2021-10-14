@@ -71,16 +71,28 @@ namespace Service.Despesa
             }
         }
 
-        public Task<Response> DoUpdateAsync(TipoDespesaRegisterDTO update)
+        public async Task<Response> DoUpdateAsync(TipoDespesaRegisterDTO update)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TipoDespesaEntity tipoDespesa = mapper.Map<TipoDespesaEntity>(update);
+                await tipoDespesaRepository.UpdateAsync(tipoDespesa);
+
+                return new Response((int)HttpStatusCode.OK, "Registro atualizado com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return new Response((int)HttpStatusCode.BadRequest, "Ocorreu um erro ao atualizar o registro:" + ex.Message);
+            }
         }
 
         public Response GetAll(Guid idUser)
         {
             try
             {
-                List<TipoDespesaEntity> listTipoDespesa = tipoDespesaRepository.SelectWithFilter(t => t.IdUsuario.Equals(idUser)).ToList();
+                List<TipoDespesaEntity> listTipoDespesa = tipoDespesaRepository
+                                                           .SelectWithFilter(t => t.IdUsuario.Equals(idUser))
+                                                           .OrderBy(t => t.Nome).ToList();
 
                 if (listTipoDespesa.Count != 0)
                 {
