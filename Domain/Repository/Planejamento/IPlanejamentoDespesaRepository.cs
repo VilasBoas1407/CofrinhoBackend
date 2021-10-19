@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain.Repository.Planejamento
 {
-    public interface IPlanejamentoDespesaRepository : IRepository<PlanejamentoDespesaEntity>
+    public interface IPlanejamentoDespesaRepository : IRepository<PlanejamentoDespesasEntity>
     {
     }
 }

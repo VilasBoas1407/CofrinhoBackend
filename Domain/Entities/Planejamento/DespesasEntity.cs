@@ -23,9 +23,5 @@ namespace Domain.Entities.Expenses
         public Guid IdTipoDespesa { get; set; }
         public TipoDespesaEntity TipoDespesa { get; set; }
 
-        #region Relacionamentos
-        public List<PlanejamentoDespesaEntity> PlanejamentosDespesasList { get; set; }
-        #endregion
-
     }
 }

@@ -97,6 +97,32 @@ namespace Data.Migrations
                     b.ToTable("LoginHistory");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoDespesasEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("IdDespesa")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdPlanejamento")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdUsuario")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlanejamentoDespesas");
+                });
+
             modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -222,33 +248,6 @@ namespace Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoDespesaEntity", b =>
-                {
-                    b.HasOne("Domain.Entities.Expenses.DespesasEntity", "Despesas")
-                        .WithMany("PlanejamentosDespesasList")
-                        .HasForeignKey("IdDespesa")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Planejamento.PlanejamentoEntity", "Planejamento")
-                        .WithMany("PlanejamentoDespesas")
-                        .HasForeignKey("IdPlanejamento")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.UserEntity", "User")
-                        .WithMany("PlanejamentoDespesas")
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Despesas");
-
-                    b.Navigation("Planejamento");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoEntity", b =>
                 {
                     b.HasOne("Domain.Entities.UserEntity", "User")
@@ -271,16 +270,9 @@ namespace Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Expenses.DespesasEntity", b =>
-                {
-                    b.Navigation("PlanejamentosDespesasList");
-                });
-
             modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoEntity", b =>
                 {
                     b.Navigation("Despesas");
-
-                    b.Navigation("PlanejamentoDespesas");
                 });
 
             modelBuilder.Entity("Domain.Entities.Planejamento.TipoDespesaEntity", b =>
@@ -291,8 +283,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.UserEntity", b =>
                 {
                     b.Navigation("Despesas");
-
-                    b.Navigation("PlanejamentoDespesas");
 
                     b.Navigation("Planejamentos");
 

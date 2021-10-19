@@ -22,7 +22,6 @@ namespace Domain.Entities.Planejamento
 
         public UserEntity User { get; set; }
         public List<DespesasEntity> Despesas { get; set; }
-        public List<PlanejamentoDespesaEntity> PlanejamentoDespesas{ get; set; }
 
         #endregion
     }

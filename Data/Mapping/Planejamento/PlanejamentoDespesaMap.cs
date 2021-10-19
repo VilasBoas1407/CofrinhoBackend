@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.Mapping.Planejamento
 {
-    public class PlanejamentoDespesaMap : IEntityTypeConfiguration<PlanejamentoDespesaEntity>
+    public class PlanejamentoDespesaMap : IEntityTypeConfiguration<PlanejamentoDespesasEntity>
     {
-        public void Configure(EntityTypeBuilder<PlanejamentoDespesaEntity> builder)
+        public void Configure(EntityTypeBuilder<PlanejamentoDespesasEntity> builder)
         {
-            builder.ToTable("PlanejamentoDespesa");
+            builder.ToTable("PlanejamentoDespesas");
 
             builder.HasKey(u => u.Id);
 
