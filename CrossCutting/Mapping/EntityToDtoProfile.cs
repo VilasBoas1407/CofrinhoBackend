@@ -3,6 +3,7 @@ using Domain.DTO.Despesas;
 using Domain.DTO.Login;
 using Domain.DTO.Planejamento;
 using Domain.Entities;
+using Domain.Entities.Expenses;
 using Domain.Entities.Planejamento;
 
 namespace CrossCutting.Mapping
@@ -16,6 +17,7 @@ namespace CrossCutting.Mapping
             CreateMap<PlanejamentoEntity, PlanejamentoRegisterDTO>().ReverseMap();
             CreateMap<PlanejamentoEntity, PlanejamentoDTO>().ReverseMap();
             CreateMap<TipoDespesaEntity, TipoDespesaRegisterDTO>().ReverseMap();
+            CreateMap<DespesasEntity, DespesaRegisterDTO>().ReverseMap();
         }
         
     }

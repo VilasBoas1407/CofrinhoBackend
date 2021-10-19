@@ -16,7 +16,7 @@ namespace Domain.Entities
         public List<PlanejamentoEntity> Planejamentos { get; set; }
         public List<TipoDespesaEntity> TipoDespesas { get; set; }
         public List<DespesasEntity> Despesas { get; set; }
-
+        public List<PlanejamentoDespesaEntity> PlanejamentoDespesas { get; set; }
         #endregion
     }
 }

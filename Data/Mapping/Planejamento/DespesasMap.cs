@@ -12,9 +12,6 @@ namespace Data.Mapping
 
             builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.IdPlanejamento)
-           .IsRequired();
-
             builder.Property(u => u.IdTipoDespesa)
            .IsRequired();
 

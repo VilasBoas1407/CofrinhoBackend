@@ -4,14 +4,16 @@ using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(CofrinhoContext))]
-    partial class CofrinhoContextModelSnapshot : ModelSnapshot
+    [Migration("20211019005019_PlanejamentoDespesa")]
+    partial class PlanejamentoDespesa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,6 +97,38 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LoginHistory");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoDespesaEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("IdDespesa")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdPlanejamento")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IdUsuario")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdDespesa");
+
+                    b.HasIndex("IdPlanejamento");
+
+                    b.HasIndex("IdUsuario");
+
+                    b.ToTable("PlanejamentoDespesa");
                 });
 
             modelBuilder.Entity("Domain.Entities.Planejamento.PlanejamentoEntity", b =>

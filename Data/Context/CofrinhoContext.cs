@@ -27,7 +27,7 @@ namespace Data.Context
             modelBuilder.Entity<DespesasEntity>(new DespesasMap().Configure);
             modelBuilder.Entity<PlanejamentoEntity>(new PlanejamentoMap().Configure);
             modelBuilder.Entity<TipoDespesaEntity>(new TipoDespesaMap().Configure);
-
+            modelBuilder.Entity<PlanejamentoDespesaEntity>(new PlanejamentoDespesaMap().Configure);
 
             #region Definindo relacionamentos
 
@@ -41,13 +41,7 @@ namespace Data.Context
             modelBuilder.Entity<DespesasEntity>().HasOne(p => p.TipoDespesa)
                 .WithMany(u => u.Despesas)
                 .HasForeignKey(p => p.IdTipoDespesa)
-                .OnDelete(DeleteBehavior.NoAction); 
-
-            modelBuilder.Entity<DespesasEntity>().HasOne(p => p.Planejamento)
-                 .WithMany(u => u.Despesas)
-                 .HasForeignKey(p => p.IdPlanejamento)
-                 .OnDelete(DeleteBehavior.NoAction);
-
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<PlanejamentoEntity>()
                 .HasOne(p => p.User)
@@ -61,6 +55,21 @@ namespace Data.Context
                 .HasForeignKey(p => p.IdUsuario)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<PlanejamentoDespesaEntity>().HasOne(p => p.Despesas)
+                .WithMany(u => u.PlanejamentosDespesasList)
+                .HasForeignKey(p => p.IdDespesa)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<PlanejamentoDespesaEntity>().HasOne(p => p.Planejamento)
+                .WithMany(u => u.PlanejamentoDespesas)
+                .HasForeignKey(p => p.IdPlanejamento)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<PlanejamentoDespesaEntity>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.PlanejamentoDespesas)
+                .HasForeignKey(p => p.IdUsuario)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             #endregion

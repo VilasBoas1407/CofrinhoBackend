@@ -16,8 +16,14 @@ namespace Domain.Entities.Planejamento
         public bool Ativo { get; set; }
 
         public Guid IdUsuario { get; set; }
+
+
+        #region Relacionamentos
+
         public UserEntity User { get; set; }
         public List<DespesasEntity> Despesas { get; set; }
+        public List<PlanejamentoDespesaEntity> PlanejamentoDespesas{ get; set; }
 
+        #endregion
     }
 }

@@ -5,7 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Repository\Planejamento\PlanejamentoDespesaRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Mapping\Planejamento\PlanejamentoMap.cs~RF520f762.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Repository\Planejamento\PlanejamentoDespesaRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
