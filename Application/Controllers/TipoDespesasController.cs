@@ -23,7 +23,7 @@ namespace Application.Controllers
         /// <response code="500">Erro interno</response>
         [Authorize("Bearer")]
         [HttpPost]
-        public async Task<object> Register([FromBody] TipoDespesaRegisterDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
+        public async Task<object> Register([FromBody] TipoDespesaDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace Application.Controllers
 
         [Authorize("Bearer")]
         [HttpPut]
-        public async Task<object> Update([FromBody] TipoDespesaRegisterDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
+        public async Task<object> Update([FromBody] TipoDespesaDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

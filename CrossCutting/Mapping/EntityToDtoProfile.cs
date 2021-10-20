@@ -16,8 +16,9 @@ namespace CrossCutting.Mapping
             CreateMap<UserEntity, UserRegisterRequestDTO>().ReverseMap();
             CreateMap<PlanejamentoEntity, PlanejamentoRegisterDTO>().ReverseMap();
             CreateMap<PlanejamentoEntity, PlanejamentoDTO>().ReverseMap();
-            CreateMap<TipoDespesaEntity, TipoDespesaRegisterDTO>().ReverseMap();
-            CreateMap<DespesasEntity, DespesaRegisterDTO>().ReverseMap();
+            CreateMap<TipoDespesaEntity, TipoDespesaDTO>().ReverseMap();
+            CreateMap<DespesasEntity, DespesaDTO>().ReverseMap();
+            CreateMap<PlanejamentoDespesasEntity, PlanejamentoDespesaDTO>().ReverseMap();
         }
         
     }

@@ -15,6 +15,13 @@
 
         }
 
+        public Response(int StatusCode, string Message, dynamic Data)
+        {
+            this.StatusCode = StatusCode;
+            this.Result = Data;
+            this.Message = Message;
+        }
+
         public int StatusCode { get; set; }
         public string Message{ get; set; }
         public dynamic Result { get; set; }

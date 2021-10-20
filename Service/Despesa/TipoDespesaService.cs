@@ -48,7 +48,7 @@ namespace Service.Despesa
             }
         }
 
-        public async Task<Response> DoRegisterAsync(TipoDespesaRegisterDTO register)
+        public async Task<Response> DoRegisterAsync(TipoDespesaDTO register)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Service.Despesa
             }
         }
 
-        public async Task<Response> DoUpdateAsync(TipoDespesaRegisterDTO update)
+        public async Task<Response> DoUpdateAsync(TipoDespesaDTO update)
         {
             try
             {

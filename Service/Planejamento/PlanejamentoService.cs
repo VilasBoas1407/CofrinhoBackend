@@ -48,7 +48,7 @@ namespace Service.Planejamento
                 if (result != null)
                 {
                     AtualizarPlanejamentoAtivo(result);
-                    return new Response(201, "Planejamento cadastrado com sucesso!");
+                    return new Response(201, "Planejamento cadastrado com sucesso!",result);
                 }
                 else
                     return new Response(400, "Erro ao cadastrar planejamento!");

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DTO.Despesas
 {
-    public class TipoDespesaRegisterDTO
+    public class TipoDespesaDTO
     {
         public Guid Id { get; set; }
 

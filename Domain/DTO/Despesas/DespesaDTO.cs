@@ -3,10 +3,10 @@ using System;
 
 namespace Domain.DTO.Despesas
 {
-    public class DespesaRegisterDTO
+    public class DespesaDTO
     {
         public Guid Id { get; set; }
-        public RecorrenciaEnum Recorrencia { get; set; }
+        public bool Recorrencia { get; set; }
         public double ValorParcela { get; set; }
         public int QuantidadeParcelas { get; set; }
         public int ParcelaAtual { get; set; }

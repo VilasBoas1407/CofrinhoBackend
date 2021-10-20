@@ -14,7 +14,7 @@ namespace Application.Controllers
     public class DespesasController : ControllerBase
     {
         [HttpPost]
-        public async Task<object> Register([FromBody] DespesaRegisterDTO registerDTO, [FromServices] IDespesaService service)
+        public async Task<object> Register([FromBody] DespesaDTO registerDTO, [FromServices] IDespesaService service)
         {
             if (!ModelState.IsValid)
             {

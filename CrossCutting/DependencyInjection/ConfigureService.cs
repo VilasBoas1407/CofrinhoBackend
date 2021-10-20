@@ -14,6 +14,8 @@ namespace CrossCutting.DependencyInjection
             serviceCollection.AddTransient<IPlanejamentoService, PlanejamentoService>();
             serviceCollection.AddTransient<ITipoDesepesaService, TipoDespesaService>();
             serviceCollection.AddTransient<IDespesaService, DespesaService>();
+            serviceCollection.AddTransient<IPlanejamentoDespesaService, PlanejamentoDespesaService>();
+
         }
     }
 }
