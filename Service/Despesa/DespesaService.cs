@@ -24,15 +24,20 @@ namespace Service.Despesa
         private IPlanejamentoRepository planejamentoRepository;
         private IPlanejamentoService planejamentoService;
         private IPlanejamentoDespesaService planejamentoDespesaService;
+        private ITipoDespesaRepository tipoDespesaRepository;
 
         public DespesaService(IMapper _mapper, IDespesaRepository _despesaRepository,
-            IPlanejamentoRepository _planejamentoRepository, IPlanejamentoService _planejamentoService, IPlanejamentoDespesaService _planejamentoDespesaService)
+            IPlanejamentoRepository _planejamentoRepository,
+            ITipoDespesaRepository _tipoDespesaRepository,
+            IPlanejamentoService _planejamentoService,
+            IPlanejamentoDespesaService _planejamentoDespesaService)
         {
             mapper = _mapper;
             despesaRepository = _despesaRepository;
             planejamentoRepository = _planejamentoRepository;
             planejamentoService = _planejamentoService;
             planejamentoDespesaService = _planejamentoDespesaService;
+            tipoDespesaRepository = _tipoDespesaRepository;
         }
 
         public async Task<Response> DoRegisterAsync(DespesaDTO register)
@@ -41,7 +46,7 @@ namespace Service.Despesa
             {
                 DespesasEntity despesa = mapper.Map<DespesasEntity>(register);
 
-                ValidarDespesa(despesa);              
+                await ValidarDespesa(despesa);              
              
                 var result = await despesaRepository.InsertAsync(despesa);
 
@@ -55,16 +60,14 @@ namespace Service.Despesa
                 {
                     return new Response(400, "Erro ao cadastrar tipo despesa!");
                 }
-
-
             }
-            catch (Exception ex)
+            catch (InternalException ex)
             {
-                return new Response((int)HttpStatusCode.BadRequest, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
+                return new Response(ex.HttpStatusCode, "Ocorreu um erro ao realizar o cadastro:" + ex.Message);
             }
         }
 
-        public void ValidarDespesa(DespesasEntity despesa)
+        public async Task<bool> ValidarDespesa(DespesasEntity despesa)
         {
             //Caso seja enviado uma despesa com 12X ela não será recorrente.
             if (despesa.QuantidadeParcelas >= 1)
@@ -76,6 +79,15 @@ namespace Service.Despesa
 
 
             despesa.ValorTotal = despesa.ValorParcela * despesa.QuantidadeParcelas;
+
+            bool temTipoDespesaCadastrado = await tipoDespesaRepository.ExistAsync(despesa.IdTipoDespesa);
+
+            if (!temTipoDespesaCadastrado)
+            {
+                throw new InternalException(200,"O tipo despesa não foi encontrado na nossa base de dados!");
+            }
+
+            return true;
         }
 
         public async void CadastrarDespesasNoPlanejamento(DespesasEntity despesa)
