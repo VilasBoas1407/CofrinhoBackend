@@ -3,16 +3,12 @@ using Domain.DTO.Despesas;
 using Domain.DTO.Planejamento;
 using Domain.Entities.Expenses;
 using Domain.Entities.Planejamento;
-using Domain.Enums;
 using Domain.Interfaces;
 using Domain.Repository.Despesas;
 using Domain.Repository.Planejamento;
 using Domain.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Despesa
@@ -21,34 +17,31 @@ namespace Service.Despesa
     {
         private readonly IMapper mapper;
         private IDespesaRepository despesaRepository;
-        private IPlanejamentoRepository planejamentoRepository;
         private IPlanejamentoService planejamentoService;
         private IPlanejamentoDespesaService planejamentoDespesaService;
         private ITipoDespesaRepository tipoDespesaRepository;
 
         public DespesaService(IMapper _mapper, IDespesaRepository _despesaRepository,
-            IPlanejamentoRepository _planejamentoRepository,
             ITipoDespesaRepository _tipoDespesaRepository,
             IPlanejamentoService _planejamentoService,
             IPlanejamentoDespesaService _planejamentoDespesaService)
         {
             mapper = _mapper;
             despesaRepository = _despesaRepository;
-            planejamentoRepository = _planejamentoRepository;
             planejamentoService = _planejamentoService;
             planejamentoDespesaService = _planejamentoDespesaService;
             tipoDespesaRepository = _tipoDespesaRepository;
         }
 
-        public async Task<Response> DoRegisterAsync(DespesaDTO register)
+        public Response DoRegister(DespesaDTO register)
         {
             try
             {
                 DespesasEntity despesa = mapper.Map<DespesasEntity>(register);
 
-                await ValidarDespesa(despesa);              
+                ValidarDespesa(despesa);              
              
-                var result = await despesaRepository.InsertAsync(despesa);
+                var result = despesaRepository.Insert(despesa);
 
                 if (result != null)
                 {
@@ -67,7 +60,7 @@ namespace Service.Despesa
             }
         }
 
-        public async Task<bool> ValidarDespesa(DespesasEntity despesa)
+        public bool ValidarDespesa(DespesasEntity despesa)
         {
             //Caso seja enviado uma despesa com 12X ela não será recorrente.
             if (despesa.QuantidadeParcelas >= 1)
@@ -80,7 +73,7 @@ namespace Service.Despesa
 
             despesa.ValorTotal = despesa.ValorParcela * despesa.QuantidadeParcelas;
 
-            bool temTipoDespesaCadastrado = await tipoDespesaRepository.ExistAsync(despesa.IdTipoDespesa);
+            bool temTipoDespesaCadastrado = tipoDespesaRepository.Exist(despesa.IdTipoDespesa);
 
             if (!temTipoDespesaCadastrado)
             {
@@ -90,26 +83,40 @@ namespace Service.Despesa
             return true;
         }
 
-        public async void CadastrarDespesasNoPlanejamento(DespesasEntity despesa)
+        public void CadastrarDespesasNoPlanejamento(DespesasEntity despesa)
         {
+            PlanejamentoEntity ultimoPlanejamentoCadastrado = new PlanejamentoEntity();
+
             for (int i = 0; i < despesa.QuantidadeParcelas; i++)
             {
                 int mesReferencia = DateTime.Now.Month + i;
                 int anoReferencia = DateTime.Now.Year;
 
-                PlanejamentoEntity planejamentoAtivo = BuscarPlanejamento(despesa.IdUsuario, mesReferencia, anoReferencia);
+                PlanejamentoEntity planejamentoAtivo = planejamentoService.BuscarPlanejamentoComMesEAno(despesa.IdUsuario, mesReferencia, anoReferencia);
 
                 //Caso o planejamento seja nulo, devemos cadastrar ele.
                 if (planejamentoAtivo == null)
                 {
+                    //Ele irá adicionando +1 para cada parcela, tem que se tomar cuidado para virar o ano também.
+                    if (mesReferencia > 12)
+                    {
+                        if(ultimoPlanejamentoCadastrado != null)
+                        {
+                            mesReferencia = 1;
+                            anoReferencia += 1;
+                        }
+                            
+                    }
+     
                     PlanejamentoRegisterDTO planejamento = new PlanejamentoRegisterDTO
                     {
                         AnoReferencia = anoReferencia,
                         MesReferencia = mesReferencia,
-                        IdUsuario = despesa.IdUsuario
+                        IdUsuario = despesa.IdUsuario,
+                        Ativo = false
                     };
 
-                    Response response = await planejamentoService.DoRegisterAsync(planejamento);
+                    Response response = planejamentoService.DoRegister(planejamento);
 
                     PlanejamentoEntity planejamentoCadastrado = response.Result;
 
@@ -121,7 +128,7 @@ namespace Service.Despesa
                     };
 
                     //Cadastrar vinculo da despesa com o planejamento
-                    await planejamentoDespesaService.DoRegisterAsync(planejamentoDespesa);
+                    planejamentoDespesaService.DoRegister(planejamentoDespesa);
                 }
                 else
                 {
@@ -133,17 +140,9 @@ namespace Service.Despesa
                     };
 
                     //Cadastrar vinculo da despesa com o planejamento
-                    await planejamentoDespesaService.DoRegisterAsync(planejamentoDespesa);
+                    planejamentoDespesaService.DoRegister(planejamentoDespesa);
                 }
             }
-        }
-
-        public PlanejamentoEntity BuscarPlanejamento(Guid IdUsuario, int mesReferencia, int AnoReferencia)
-        {
-            return planejamentoRepository.
-                SelectWithFilter(p => p.IdUsuario.Equals(IdUsuario) &&
-                p.MesReferencia.Equals(mesReferencia) &&
-                p.AnoReferencia.Equals(AnoReferencia)).FirstOrDefault();
         }
     }
 }

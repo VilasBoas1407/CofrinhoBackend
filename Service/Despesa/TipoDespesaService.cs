@@ -25,11 +25,11 @@ namespace Service.Despesa
             despesaRepository = _despesaRepository;
         }
 
-        public async Task<Response> Delete(Guid id)
+        public Response Delete(Guid id)
         {
             try
             {
-                bool temDespesaCadastraComTipo =  despesaRepository.ExistAsync(d => d.IdTipoDespesa.Equals(id));
+                bool temDespesaCadastraComTipo =  despesaRepository.Exist(d => d.IdTipoDespesa.Equals(id));
 
                 if (temDespesaCadastraComTipo)
                 {
@@ -37,7 +37,7 @@ namespace Service.Despesa
                 }
                 else
                 {
-                    await tipoDespesaRepository.DeleteAsync(id);
+                    tipoDespesaRepository.Delete(id);
                     return new Response((int)HttpStatusCode.OK, "Registro excluído com sucesso!");
                 }
             }
@@ -48,12 +48,12 @@ namespace Service.Despesa
             }
         }
 
-        public async Task<Response> DoRegisterAsync(TipoDespesaDTO register)
+        public Response DoRegister(TipoDespesaDTO register)
         {
             try
             {
                 TipoDespesaEntity tipoDespesa = mapper.Map<TipoDespesaEntity>(register);
-                var result = await tipoDespesaRepository.InsertAsync(tipoDespesa);
+                var result = tipoDespesaRepository.Insert(tipoDespesa);
 
                 if (result != null)
                 {
@@ -71,12 +71,12 @@ namespace Service.Despesa
             }
         }
 
-        public async Task<Response> DoUpdateAsync(TipoDespesaDTO update)
+        public Response DoUpdate(TipoDespesaDTO update)
         {
             try
             {
                 TipoDespesaEntity tipoDespesa = mapper.Map<TipoDespesaEntity>(update);
-                await tipoDespesaRepository.UpdateAsync(tipoDespesa);
+                tipoDespesaRepository.Update(tipoDespesa);
 
                 return new Response((int)HttpStatusCode.OK, "Registro atualizado com sucesso!");
             }
@@ -109,11 +109,11 @@ namespace Service.Despesa
             }
         }
 
-        public async Task<Response> GetByID(Guid id)
+        public Response GetByID(Guid id)
         {
             try
             {
-                TipoDespesaEntity tipoDespesa = await tipoDespesaRepository.SelectAsync(id);
+                TipoDespesaEntity tipoDespesa = tipoDespesaRepository.Select(id);
 
                 if (tipoDespesa != null)
                 {

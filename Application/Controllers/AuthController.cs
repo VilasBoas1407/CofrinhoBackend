@@ -24,7 +24,7 @@ namespace Application.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<object> Login([FromBody] LoginRequestDTO loginDTO, [FromServices] IAuthService service)
+        public object Login([FromBody] LoginRequestDTO loginDTO, [FromServices] IAuthService service)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +33,7 @@ namespace Application.Controllers
 
             try
             {
-                Response response = await service.DoLoginAsync(loginDTO);
+                Response response = service.DoLogin(loginDTO);
 
                 if(response.StatusCode == 200)
                     return StatusCode(response.StatusCode, response.Result);
@@ -56,7 +56,7 @@ namespace Application.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("register")]
-        public async Task<object> RegisterAsync([FromBody] UserRegisterRequestDTO userRegister, [FromServices] IAuthService service)
+        public object RegisterAsync([FromBody] UserRegisterRequestDTO userRegister, [FromServices] IAuthService service)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace Application.Controllers
 
             try
             {
-                Response response = await service.DoRegisterAsync(userRegister);
+                Response response = service.DoRegister(userRegister);
 
                 return StatusCode(response.StatusCode, new { response.Message });
             }

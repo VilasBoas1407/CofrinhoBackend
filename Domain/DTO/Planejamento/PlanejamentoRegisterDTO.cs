@@ -12,9 +12,12 @@ namespace Domain.DTO.Planejamento
         [Required(ErrorMessage = "AnoReferencia é um campo obrigatório para registro!")]
         public int AnoReferencia { get; set; }
 
+        public bool Ativo { get; set; }
 
         [Required(ErrorMessage = "IdUsuario é um campo obrigatório para registro!")]
         public Guid IdUsuario { get; set; }
+
+        public bool AtualizarPlanejamentoAtivo { get; set; }
 
     }
 }

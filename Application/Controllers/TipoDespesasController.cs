@@ -23,7 +23,7 @@ namespace Application.Controllers
         /// <response code="500">Erro interno</response>
         [Authorize("Bearer")]
         [HttpPost]
-        public async Task<object> Register([FromBody] TipoDespesaDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
+        public object Register([FromBody] TipoDespesaDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
         {
             if (!ModelState.IsValid)
             {
@@ -32,7 +32,7 @@ namespace Application.Controllers
 
             try
             {
-                Response response = await service.DoRegisterAsync(tipoDespesaRegister);
+                Response response = service.DoRegister(tipoDespesaRegister);
 
                 return StatusCode(response.StatusCode, new { response.Message });
             }
@@ -44,14 +44,14 @@ namespace Application.Controllers
 
         [Authorize("Bearer")]
         [HttpPut]
-        public async Task<object> Update([FromBody] TipoDespesaDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
+        public object Update([FromBody] TipoDespesaDTO tipoDespesaRegister, [FromServices] ITipoDesepesaService service)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                Response response = await service.DoUpdateAsync(tipoDespesaRegister);
+                Response response = service.DoUpdate(tipoDespesaRegister);
                 return StatusCode(response.StatusCode, new { response.Message });
             }
             catch (Exception e )
@@ -97,11 +97,11 @@ namespace Application.Controllers
         [Authorize("Bearer")]
         [HttpGet]
         [Route("GetById{id}")]
-        public async Task<object> GetByID([FromRoute] Guid id, [FromServices] ITipoDesepesaService service)
+        public object GetByID([FromRoute] Guid id, [FromServices] ITipoDesepesaService service)
         {
             try
             {
-                Response response = await service.GetByID(id);
+                Response response = service.GetByID(id);
 
                 if (response.StatusCode == 200)
                     return StatusCode(response.StatusCode, response.Result);
@@ -126,11 +126,11 @@ namespace Application.Controllers
         [Authorize("Bearer")]
         [HttpDelete]
         [Route("{id}")]
-        public async Task<object> Delete([FromRoute] Guid id, [FromServices] ITipoDesepesaService service)
+        public object Delete([FromRoute] Guid id, [FromServices] ITipoDesepesaService service)
         {
             try
             {
-                Response response = await service.Delete(id);
+                Response response = service.Delete(id);
 
                 if (response.StatusCode == 200)
                     return StatusCode(response.StatusCode, new { response.Message });

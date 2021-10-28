@@ -7,7 +7,7 @@ namespace Domain.Interfaces
 {
     public interface IAuthService 
     {
-        Task<Response> DoLoginAsync(LoginRequestDTO login);
-        Task<Response> DoRegisterAsync(UserRegisterRequestDTO userRegister);
+        Response DoLogin(LoginRequestDTO login);
+        Response DoRegister(UserRegisterRequestDTO userRegister);
     }
 }

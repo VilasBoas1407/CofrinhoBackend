@@ -21,7 +21,7 @@ namespace Application.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize("Bearer")]
-        public async Task<object> Register([FromBody] PlanejamentoRegisterDTO registerDTO, [FromServices] IPlanejamentoService service)
+        public object Register([FromBody] PlanejamentoRegisterDTO registerDTO, [FromServices] IPlanejamentoService service)
         {
             if (!ModelState.IsValid)
             {
@@ -30,7 +30,7 @@ namespace Application.Controllers
 
             try
             {
-                Response response = await service.DoRegisterAsync(registerDTO);
+                Response response = service.DoRegister(registerDTO);
 
                 if (response.StatusCode == 200)
                     return StatusCode(response.StatusCode, response.Result);

@@ -14,7 +14,7 @@ namespace Application.Controllers
     public class DespesasController : ControllerBase
     {
         [HttpPost]
-        public async Task<object> Register([FromBody] DespesaDTO registerDTO, [FromServices] IDespesaService service)
+        public object Register([FromBody] DespesaDTO registerDTO, [FromServices] IDespesaService service)
         {
             if (!ModelState.IsValid)
             {
@@ -23,7 +23,7 @@ namespace Application.Controllers
 
             try
             {
-                Response response = await service.DoRegisterAsync(registerDTO);
+                Response response = service.DoRegister(registerDTO);
 
                 if (response.StatusCode == 200)
                     return StatusCode(response.StatusCode, response.Result);

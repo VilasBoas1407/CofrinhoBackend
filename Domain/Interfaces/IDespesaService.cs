@@ -6,6 +6,6 @@ namespace Domain.Interfaces
 {
     public interface IDespesaService
     {
-        Task<Response> DoRegisterAsync(DespesaDTO register);
+        Response DoRegister(DespesaDTO register);
     }
 }

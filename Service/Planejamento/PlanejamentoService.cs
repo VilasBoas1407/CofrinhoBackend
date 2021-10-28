@@ -25,29 +25,26 @@ namespace Service.Planejamento
 
         }
 
-        public async Task<Response> DoRegisterAsync(PlanejamentoRegisterDTO register)
+        public Response DoRegister(PlanejamentoRegisterDTO register)
         {
             try
             {
                 PlanejamentoEntity planejamento = mapper.Map<PlanejamentoEntity>(register);
 
-                planejamento.DataInicio = new DateTime(planejamento.AnoReferencia, (int)planejamento.MesReferencia, 1); ;
-                planejamento.DataFim = new DateTime(planejamento.AnoReferencia, (int)planejamento.MesReferencia, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                planejamento.DataInicio = new DateTime(planejamento.AnoReferencia, (int)planejamento.MesReferencia, 1); 
+                planejamento.DataFim = new DateTime(planejamento.AnoReferencia, (int)planejamento.MesReferencia, DateTime.DaysInMonth((int)planejamento.AnoReferencia,(int) planejamento.MesReferencia));
 
-                planejamento.Ativo = true;
+                bool hasPlanejamento = ExistePlanejamentoComMesEAno(planejamento.IdUsuario, (int)planejamento.MesReferencia, (int)planejamento.AnoReferencia);
 
-                bool hasPlanejamento = planejamentoRepository.ExistAsync(p => p.MesReferencia.Equals(planejamento.MesReferencia) 
-                && p.AnoReferencia.Equals(planejamento.AnoReferencia) 
-                && p.IdUsuario == planejamento.IdUsuario);
-                    
-                if(hasPlanejamento)
+                if (hasPlanejamento)
                     return new Response(400, "Já existe um planejamento cadastrado nesse período.");
 
-                var result = await planejamentoRepository.InsertAsync(planejamento);
+                var result = planejamentoRepository.Insert(planejamento);
 
                 if (result != null)
                 {
-                    AtualizarPlanejamentoAtivo(result);
+                    if(register.AtualizarPlanejamentoAtivo)
+                        AtualizarPlanejamentoAtivo(result);
                     return new Response(201, "Planejamento cadastrado com sucesso!",result);
                 }
                 else
@@ -60,11 +57,11 @@ namespace Service.Planejamento
             }
         }
 
-        public PlanejamentoDTO GetPlanejamentoAtivoByUser(Guid idUser)
+        public PlanejamentoDTO GetPlanejamentoAtivoByUser(Guid IdUsuario)
         {
             try
             {
-                var planejamento = planejamentoRepository.GetPlanejamentoAtivoByUser(idUser);
+                var planejamento = planejamentoRepository.GetPlanejamentoAtivoByUser(IdUsuario);
                 PlanejamentoDTO planejamentoDTO = mapper.Map<PlanejamentoDTO>(planejamento);
 
                 return planejamentoDTO;
@@ -90,9 +87,24 @@ namespace Service.Planejamento
             if(planejamentoAtivo != null)
             {
                 planejamentoAtivo.Ativo = false;
-                planejamentoRepository.UpdateAsync(planejamentoAtivo);
+                planejamentoRepository.Update(planejamentoAtivo);
             }
-    
+
         }
+
+        public PlanejamentoEntity BuscarPlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia)
+        {
+           return planejamentoRepository.SelectWithFilter(p => p.MesReferencia.Equals(MesReferencia)
+                && p.AnoReferencia.Equals(AnoReferencia)
+                && p.IdUsuario == IdUsuario).FirstOrDefault();
+        }
+
+        public bool ExistePlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia)
+        {
+            return planejamentoRepository.Exist(p => p.MesReferencia.Equals(MesReferencia)
+                && p.AnoReferencia.Equals(AnoReferencia)
+                && p.IdUsuario == IdUsuario);
+        }
+
     }
 }

@@ -22,19 +22,19 @@ namespace Data.Repository
             _dataSet = context.Set<T>();
         }
 
-        public async Task<bool> DeleteAsync(Guid Id)
+        public bool Delete(Guid Id)
         {
             try
             {
                 bool ret = true;
-                var result = await _dataSet
-                    .SingleOrDefaultAsync(p => p.Id.Equals(Id));
+                var result =  _dataSet
+                    .SingleOrDefault(p => p.Id.Equals(Id));
 
                 if (result == null)
                     return ret;
 
                 _dataSet.Remove(result);
-                await _context.SaveChangesAsync();
+                 _context.SaveChanges();
 
                 return ret;
             }
@@ -44,7 +44,7 @@ namespace Data.Repository
             }
         }
 
-        public async Task<T> InsertAsync(T item)
+        public T Insert(T item)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Data.Repository
                 item.CreateAt = DateTime.UtcNow;
                 _dataSet.Add(item);
 
-                await _context.SaveChangesAsync();
+                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -65,16 +65,16 @@ namespace Data.Repository
             return item;
         }
 
-        public async Task<bool> ExistAsync(Guid id)
+        public bool Exist(Guid id)
         {
-            return await _dataSet.AnyAsync(p => p.Id.Equals(id));
+            return _dataSet.Any(p => p.Id.Equals(id));
         }
 
-        public async Task<T> SelectAsync(Guid id)
+        public T Select(Guid id)
         {
             try
             {
-                return await _dataSet.SingleOrDefaultAsync(p => p.Id.Equals(id));
+                return  _dataSet.SingleOrDefault(p => p.Id.Equals(id));
             }
             catch (Exception ex)
             {
@@ -82,11 +82,11 @@ namespace Data.Repository
             }
         }
 
-        public async Task<IEnumerable<T>> SelectAsync()
+        public IEnumerable<T> Select()
         {
             try
             {
-                return await _dataSet.ToListAsync();
+                return  _dataSet.ToList();
             }
             catch (Exception ex)
             {
@@ -94,12 +94,13 @@ namespace Data.Repository
             }
         }
 
-        public async Task<T> UpdateAsync(T item)
+
+        public T Update(T item)
         {
             try
             {
-                var result = await _dataSet
-                    .SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
+                var result = _dataSet
+                    .SingleOrDefault(p => p.Id.Equals(item.Id));
 
                 if (result == null)
                     return null;
@@ -108,7 +109,7 @@ namespace Data.Repository
                 item.CreateAt = result.CreateAt;
 
                 _context.Entry(result).CurrentValues.SetValues(item);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
             }
             catch (Exception ex)
@@ -124,9 +125,10 @@ namespace Data.Repository
             return _dataSet.Where(filtro);
         }
 
-        public bool ExistAsync(Func<T, bool> filtro)
+        public bool Exist(Func<T, bool> filtro)
         {
             return _dataSet.Any(filtro);
         }
+
     }
 }

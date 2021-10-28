@@ -9,6 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IPlanejamentoDespesaService
     {
-        Task<Response> DoRegisterAsync(PlanejamentoDespesaDTO register);
+        Response DoRegister(PlanejamentoDespesaDTO register);
     }
 }

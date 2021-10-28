@@ -41,12 +41,12 @@ namespace Testes.Login
 
             //Act - Buscar por usuários com as informações passadas.
             mock = new Mock<IAuthService>();
-            mock.Setup(m => m.DoLoginAsync(userLogin)).ReturnsAsync(response);
+            mock.Setup(m => m.DoLogin(userLogin)).Returns(response);
             authService = mock.Object;
 
             //Assert
 
-            var result_service = await authService.DoLoginAsync(userLogin);
+            var result_service = authService.DoLogin(userLogin);
 
             Assert.NotNull(result_service);
             Assert.Equal(result_service.Result.Email, userLogin.Email);
@@ -73,7 +73,7 @@ namespace Testes.Login
 
             //Act - Buscar por usuários com as informações passadas.
             mock = new Mock<IAuthService>();
-            mock.Setup(m => m.DoRegisterAsync(userRegister)).ReturnsAsync(response);
+            mock.Setup(m => m.DoRegister(userRegister)).Returns(response);
             authService = mock.Object;
 
             //Assert
@@ -103,15 +103,15 @@ namespace Testes.Login
 
             //Act - Buscar por usuários com as informações passadas.
             mock = new Mock<IAuthService>();
-            mock.Setup(m => m.DoRegisterAsync(userRegister));
+            mock.Setup(m => m.DoRegister(userRegister));
             authService = mock.Object;
-            var resultPrimeiroCadastro = authService.DoRegisterAsync(userRegister);
+            var resultPrimeiroCadastro = authService.DoRegister(userRegister);
 
             mock = new Mock<IAuthService>();
-            mock.Setup(m => m.DoRegisterAsync(userRegister));
+            mock.Setup(m => m.DoRegister(userRegister));
             authService = mock.Object;
 
-            var resultSegundoCadastro = authService.DoRegisterAsync(userRegister);
+            var resultSegundoCadastro = authService.DoRegister(userRegister);
 
             //Assert
             Assert.Equal(400, response.StatusCode);

@@ -50,7 +50,7 @@ namespace Service.Auth
         }
 
 
-        public async Task<Response> DoLoginAsync(LoginRequestDTO loginRequest)
+        public Response DoLogin(LoginRequestDTO loginRequest)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Service.Auth
                     history.Email = user.Email;
                     history.CreateAt = DateTime.Now;
 
-                    await loginHistoryRepository.InsertAsync(history);
+                    loginHistoryRepository.Insert(history);
 
                     LoginResponseDTO responseDTO = mapper.Map<LoginResponseDTO>(user);
 
@@ -110,20 +110,20 @@ namespace Service.Auth
             }
         }
 
-        public async Task<Response> DoRegisterAsync(UserRegisterRequestDTO userRegister)
+        public Response DoRegister(UserRegisterRequestDTO userRegister)
         {
             try
             {
                 UserEntity user = mapper.Map<UserEntity>(userRegister);
 
-                bool hasEmailCadastrado = userRepository.ExistAsync(u => u.Email.Equals(user.Email));
+                bool hasEmailCadastrado = userRepository.Exist(u => u.Email.Equals(user.Email));
 
                 if (hasEmailCadastrado)
                     return new Response(400, "E-mail já cadastrado na base de dados!");
 
                 user.Password = new Hash().CriptografarSenha(userRegister.Password);
 
-                var result = await userRepository.InsertAsync(user);
+                var result = userRepository.Insert(user);
 
                 PlanejamentoRegisterDTO planejamentoRegister = new PlanejamentoRegisterDTO();
 
@@ -132,7 +132,7 @@ namespace Service.Auth
                 planejamentoRegister.IdUsuario = result.Id;
 
 
-                var resultPlanejamento = await planejamentoService.DoRegisterAsync(planejamentoRegister);
+                var resultPlanejamento = planejamentoService.DoRegister(planejamentoRegister);
 
                 if (result != null)
                     return new Response(201, "Usuário cadastrado com sucesso!");

@@ -7,10 +7,10 @@ namespace Domain.Interfaces
 {
     public interface ITipoDesepesaService
     {
-        Task<Response> DoRegisterAsync(TipoDespesaDTO register);
+        Response DoRegister(TipoDespesaDTO register);
         Response GetAll(Guid idUser);
-        Task<Response> GetByID(Guid id);
-        Task<Response> Delete(Guid id);
-        Task<Response> DoUpdateAsync(TipoDespesaDTO update);
+        Response GetByID(Guid id);
+        Response Delete(Guid id);
+        Response DoUpdate(TipoDespesaDTO update);
     }
 }

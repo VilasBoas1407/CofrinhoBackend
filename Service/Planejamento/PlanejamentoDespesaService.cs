@@ -21,13 +21,13 @@ namespace Service.Planejamento
             planejamentoDespesaRepository = _planejamentoDespesaRepository;
         }
 
-        public async Task<Response> DoRegisterAsync(PlanejamentoDespesaDTO register)
+        public Response DoRegister(PlanejamentoDespesaDTO register)
         {
             try
             {
                 PlanejamentoDespesasEntity planejamentoDespesas = mapper.Map<PlanejamentoDespesasEntity>(register);
 
-                var result = await planejamentoDespesaRepository.InsertAsync(planejamentoDespesas);
+                var result = planejamentoDespesaRepository.Insert(planejamentoDespesas);
 
                 if (result != null)
                 {
