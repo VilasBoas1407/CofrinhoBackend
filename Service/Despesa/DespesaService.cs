@@ -87,26 +87,19 @@ namespace Service.Despesa
         {
             PlanejamentoEntity ultimoPlanejamentoCadastrado = new PlanejamentoEntity();
 
+            int mesReferencia = DateTime.Now.Month;
+            int anoReferencia = DateTime.Now.Year;
+
             for (int i = 0; i < despesa.QuantidadeParcelas; i++)
             {
-                int mesReferencia = DateTime.Now.Month + i;
-                int anoReferencia = DateTime.Now.Year;
+                if(i != 0)
+                    mesReferencia += 1;
 
                 PlanejamentoEntity planejamentoAtivo = planejamentoService.BuscarPlanejamentoComMesEAno(despesa.IdUsuario, mesReferencia, anoReferencia);
 
                 //Caso o planejamento seja nulo, devemos cadastrar ele.
                 if (planejamentoAtivo == null)
                 {
-                    //Ele irá adicionando +1 para cada parcela, tem que se tomar cuidado para virar o ano também.
-                    if (mesReferencia > 12)
-                    {
-                        if(ultimoPlanejamentoCadastrado != null)
-                        {
-                            mesReferencia = 1;
-                            anoReferencia += 1;
-                        }
-                            
-                    }
      
                     PlanejamentoRegisterDTO planejamento = new PlanejamentoRegisterDTO
                     {

@@ -2,9 +2,11 @@
 using AutoMapper.Configuration;
 using Domain.DTO.Planejamento;
 using Domain.Entities.Planejamento;
+using Domain.Enums;
 using Domain.Interfaces;
 using Domain.Repository.Planejamento;
 using Domain.Utils;
+using Service.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +32,14 @@ namespace Service.Planejamento
             try
             {
                 PlanejamentoEntity planejamento = mapper.Map<PlanejamentoEntity>(register);
+
+                int mesReferencia = (int)planejamento.MesReferencia;
+                int anoReferencia = planejamento.AnoReferencia;
+
+                DataUtils.ConverterNumeroDeMesesParaData(ref mesReferencia, ref anoReferencia);
+
+                planejamento.MesReferencia = (MesesEnum)mesReferencia;
+                planejamento.AnoReferencia = anoReferencia;
 
                 planejamento.DataInicio = new DateTime(planejamento.AnoReferencia, (int)planejamento.MesReferencia, 1); 
                 planejamento.DataFim = new DateTime(planejamento.AnoReferencia, (int)planejamento.MesReferencia, DateTime.DaysInMonth((int)planejamento.AnoReferencia,(int) planejamento.MesReferencia));
@@ -94,8 +104,11 @@ namespace Service.Planejamento
 
         public PlanejamentoEntity BuscarPlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia)
         {
-           return planejamentoRepository.SelectWithFilter(p => p.MesReferencia.Equals(MesReferencia)
-                && p.AnoReferencia.Equals(AnoReferencia)
+
+            DataUtils.ConverterNumeroDeMesesParaData(ref MesReferencia, ref AnoReferencia);
+
+            return planejamentoRepository.SelectWithFilter(p => p.MesReferencia == (MesesEnum)MesReferencia
+                && p.AnoReferencia == AnoReferencia
                 && p.IdUsuario == IdUsuario).FirstOrDefault();
         }
 
