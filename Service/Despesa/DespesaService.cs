@@ -95,7 +95,7 @@ namespace Service.Despesa
                 if(i != 0)
                     mesReferencia += 1;
 
-                PlanejamentoEntity planejamentoAtivo = planejamentoService.BuscarPlanejamentoComMesEAno(despesa.IdUsuario, mesReferencia, anoReferencia);
+                PlanejamentoEntity planejamentoAtivo = planejamentoService.GetPlanejamentoComMesEAno(despesa.IdUsuario, mesReferencia, anoReferencia);
 
                 //Caso o planejamento seja nulo, devemos cadastrar ele.
                 if (planejamentoAtivo == null)

@@ -10,9 +10,12 @@ namespace Domain.Interfaces
     public interface IPlanejamentoService
     {
         Response DoRegister(PlanejamentoRegisterDTO register);
+        Response DoUpdate(PlanejamentoEntity planejamento);
         PlanejamentoDTO GetPlanejamentoAtivoByUser(Guid IdUsuario);
 
-        PlanejamentoEntity BuscarPlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia);
-        bool ExistePlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia);
+        PlanejamentoEntity GetPlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia);
+        bool HasPlanejamentoComMesEAno(Guid IdUsuario, int MesReferencia, int AnoReferencia);
+
+        void UpdatePlanejamentoAtivo(PlanejamentoEntity planejamento);
     }
 }

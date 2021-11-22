@@ -4,6 +4,7 @@ using Domain.DTO.Login;
 using Domain.DTO.Planejamento;
 using Domain.Entities;
 using Domain.Entities.History;
+using Domain.Entities.Planejamento;
 using Domain.Interfaces;
 using Domain.Repository;
 using Domain.Repository.History;
@@ -90,7 +91,43 @@ namespace Service.Auth
                     var handler = new JwtSecurityTokenHandler();
                     string token = CreateToken(identity, createDate, experationDate, handler);
 
-                    responseDTO.planejamentoAtivo = planejamentoService.GetPlanejamentoAtivoByUser(user.Id);
+                    PlanejamentoDTO planejamentoAtivo = planejamentoService.GetPlanejamentoAtivoByUser(user.Id);
+
+                    if (planejamentoAtivo == null)
+                    {
+                        // Caso não tenha um planejamento ele irá buscar o planejamento do mês
+                        PlanejamentoEntity planejamento = planejamentoService.GetPlanejamentoComMesEAno(user.Id, DateTime.Now.Month, DateTime.Now.Year);
+
+                        // Caso não tenha do mês, cadastrar um 
+                        if(planejamento == null)
+                        {
+
+                            PlanejamentoRegisterDTO createPlanejamento = new PlanejamentoRegisterDTO()
+                            {
+                              IdUsuario = user.Id,
+                              AnoReferencia = DateTime.Now.Year,
+                              Ativo = true,
+                              AtualizarPlanejamentoAtivo = false,
+                              MesReferencia = DateTime.Now.Month
+                            };
+
+                            Response planCadastrado = planejamentoService.DoRegister(createPlanejamento);
+
+                            responseDTO.planejamentoAtivo = planCadastrado.Result;
+                        }
+                        else
+                        {
+                            //Seta o planejamento do mês como ativo
+                            if (!planejamento.Ativo) {
+                                planejamento.Ativo = true;
+                                planejamentoService.DoUpdate(planejamento);
+                            }
+
+                            responseDTO.planejamentoAtivo = mapper.Map<PlanejamentoDTO>(planejamento);
+                        }
+                    }
+                    else
+                        responseDTO.planejamentoAtivo = planejamentoAtivo;
 
                     responseDTO.Token = token;
                     responseDTO.TokenExpiration = experationDate;
